@@ -1,0 +1,156 @@
+Start Elastic Search with custom Cluster Name and Node Name:
+./elasticsearch -Ecluster.name=my_cluster_name -Enode.name=my_node_name
+
+Once it is started Explore your Cluster
+-	Cluster Health - curl -X GET "localhost:9200/_cat/health?v"
+	Green - everything is good (cluster is fully functional)
+	Yellow - all data is available but some replicas are not yet allocated (cluster is fully functional)
+	Red - some data is not available for whatever reason (cluster is partially functional)
+
+Get Nodes Information:
+curl -X GET "localhost:9200/_cat/nodes?v"
+
+List all indices:
+curl -X GET "localhost:9200/_cat/indices?v"
+
+Create Indices:
+curl -X PUT "localhost:9200/customer?pretty"
+curl -X GET "localhost:9200/_cat/indices?v"
+
+Index and Query the Document:
+curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H "Content-Type: application/json" -d "
+{ 
+	\"name\": \"John Doe\" 
+}
+"
+
+OR
+
+json.txt
+{ 
+	\"name\": \"John Doe\" 
+}
+curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H "Content-Type: application/json" -d @json.txt
+
+Retrieve the document we indexed:
+curl -X GET "localhost:9200/customer/_doc/1?pretty"
+
+Delete an Index:
+curl -X DELETE "localhost:9200/customer?pretty"
+curl -X GET "localhost:9200/_cat/indices?v"
+
+Modify Your Data:
+curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H "Content-Type: application/json" -d "
+{ 
+	\"name\": \"John Doe\" 
+}
+"
+Will create new document and indexed.
+
+curl -X PUT "localhost:9200/customer/_doc/1?pretty" -H "Content-Type: application/json" -d "
+{ 
+	\"name\": \"Jane Doe\" 
+}
+"
+Will replace the John Doe to Jane Doe because the id = 1 common.
+
+Updating Document:
+curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H "Content-Type: application/json" -d"
+{
+  \"doc\": { \"name\": \"Jane Doe\" }
+}
+"
+
+curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H "Content-Type: application/json" -d "
+{ 
+	\"doc\": { \"name\": \"Jane Doe\", \"age\": 20 } 
+}
+"
+
+ctx._source refers to the current source document
+curl -X POST "localhost:9200/customer/_doc/1/_update?pretty" -H "Content-Type: application/json" -d "
+{ 
+	\"script\" : \"ctx._source.age += 5\" 
+}
+"
+
+Deleting the Document:
+curl -X DELETE "localhost:9200/customer/_doc/2?pretty"
+
+
+Batch Processing:
+curl -X POST "localhost:9200/customer/_doc/_bulk?pretty" -H "Content-Type: application/json" --data-binary @demo.json
+curl -X POST "localhost:9200/bank/_doc/_bulk?pretty&refresh" -H "Content-Type: application/json" --data-binary @bank.json
+
+
+SERACH API:
+
+There are two basic ways to run searches: 
+1.	one is by sending search parameters through the REST request URI and 
+2.	the other by sending them through the REST request body.
+
+curl -X GET "localhost:9200/bank/_search?q=*&sort=account_number:asc&pretty"
+OR
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_all\": {} }, \"sort\": [ { \"account_number\": \"asc\" } ]}"
+
+QUERY DSL:
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_all\": {} } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_all\": {} }, \"from\": 10, \"size\": 10 }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_all\": {} }, \"sort\": { \"balance\": { \"order\": \"desc\" } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_all\": {} }, \"_source\": [\"account_number\", \"balance\"] }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match\": { \"account_number\": 20 } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match\": { \"address\": \"mill\" } } }"
+
+--Address contains mill or lane.
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match\": { \"address\": \"mill lane\" } } }"
+
+--Address contains "mill lane" phrase.
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"match_phrase\": { \"address\": \"mill lane\" } } }"
+
+BOOL QUERY:
+--mill and lane
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"bool\": {  \"must\": [ { \"match\": { \"address\": \"mill\" } },{ \"match\": { \"address\": \"lane\" } } ] } } }"
+
+--mill or lane
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"bool\": {  \"should\": [ { \"match\": { \"address\": \"mill\" } },{ \"match\": { \"address\": \"lane\" } } ] } } }"
+
+--niether mill nor lane
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"bool\": {  \"must_not\": [ { \"match\": { \"address\": \"mill\" } },{ \"match\": { \"address\": \"lane\" } } ] } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"bool\": {  \"must\": [ { \"match\": { \"age\": \"40\" } } ], \"must_not\": [ { \"match\": { \"state\": \"ID\" } } ] } } }"
+
+FILTERS:
+--Can be used if you don't want your queries to calculate scores (_score) field unnecessary.
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d "{ \"query\": { \"bool\": { \"must\": { \"match_all\": {} }, \"filter\": { \"range\": { \"balance\": {\"gte\": 20000, \"lte\": 30000} } } }}}"
+
+EXECUTING AGGREGATIONS:
+ In Elasticsearch, you have the ability to execute searches returning hits and at the same time return aggregated results separate from the hits all in one response.
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d " { \"size\": 0, \"aggs\": { \"group_by_state\": { \"terms\": { \"field\": \"state.keyword\" } } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d " { \"size\": 0, \"aggs\": { \"group_by_state\": { \"terms\": { \"field\": \"state.keyword\" }, \"aggs\": { \"average_balance\": { \"avg\": {
+ \"field\": \"balance\" } } } } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d " { \"size\": 0, \"aggs\": { \"group_by_state\": { \"terms\": { \"field\": \"state.keyword\", \"order\": { \"average_balance\": \"desc\" } }, \"aggs\": { \"average_balance\": { \"avg\": { \"field\": \"balance\" } } } } } }"
+
+curl -X GET "localhost:9200/bank/_search?pretty" -H "Content-Type: application/json" -d " { \"size\": 0, \"aggs\": { \"group_by_age\" : { \"range\":{\"field\":\"age\", \"ranges\": [ {\"from\" : 20, \"to\" : 30},{\"from\" : 30, \"to\" : 40},{\"from\" : 40,\"to\" : 50}] }, \"aggs\": { \"group_by_gender\": { \"terms\": { \"field\": \"gender.keyword\", \"order\": { \"average_balance\": \"desc\" } }, \"aggs\": { \"average_balance\": { \"avg\": { \"field\": \"balance\" } } } } } } } }"
+
+
+
+# GET /<logstash-{now/d}>/_search
+curl -X GET "localhost:9200/%3Clogstash-%7Bnow%2Fd%7D%3E/_search" -H 'Content-Type: application/json' -d'
+{
+  "query" : {
+    "match": {
+      "test": "data"
+    }
+  }
+}
+'
+
+
+

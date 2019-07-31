@@ -1,0 +1,53 @@
+Libraries used for following developments:
+
+API - Flask, Bottle, Pyramid
+Website - Django, TurboGears, web2py
+APP(CMS, ERP) - Plone, django-cms, Mezzanine
+
+To run flask app, open powershell and execute below commands:
+$env:FLASK_APP = "service.py"
+flask run
+
+C:\Python36\python.exe 
+
+Application Scripting : Include new users flow or UI or functionality to integrate with existing Application. For Demo will use Blender and interact using Application script.
+
+The Basics : Python.org have loads of resources about python.
+Working with python:
+1.	python
+	-Executing python file
+	-Rudimentary REPL : Read, Eval, Print, Loop : Used for checking python libraries.
+
+2.	pip : pip install packager : used to install 3rd party libraries.
+
+3.	ipython : Same as Rudimentary REPL but interactive Shell and much more.
+
+Resources : docs.python.org: official pyhton documents
+
+pip - is used for the following:
+1.	Install
+2.	Uninstall
+3.	Dependencies - to install dependencies.
+4.	Package group
+5.	Versions
+
+pypi.python.org - is a place where all the packages are present to be used.
+
+Python2 is used over python3 only if - No control over environment or Libraries not supported python3
+
+Executing Python Code:
+1.	Interpreter - Executing python file using python.exe
+2.	REPL - Call out to python code within Interactive REPL.
+3.	Natively - Compile and run (py2exe, pyinstaller etc.)
+
+In case of any changes to py file we need to reload the library:
+import importlib
+importlib.reload(hello_world)
+
+For Autoload use ipyhton:
+1.	%load_ext autoreload
+2.	%autoreload 2
+3.	from hello_world import sayHello
+4.	sayHello()
+
+
