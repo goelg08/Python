@@ -4,4 +4,4 @@ with open('input.json', 'r') as input:
 	with open('output.txt', 'w') as output:
 		output.write(obj['name'] + "'s Hobbies:\n")
 		for hobby in obj['hobbies']:
-			output.write(hobby +"\n")
+			output.write(hobby + "\n")
