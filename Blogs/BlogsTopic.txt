@@ -1,0 +1,2 @@
+1. Pentaho archive is corrupted - Done.
+2. How to write CLR procedures.
