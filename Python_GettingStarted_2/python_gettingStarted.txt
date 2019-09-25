@@ -1,0 +1,6 @@
+Different Frameworks:
+DJANGO - Web Development
+Tensor Flow - Artificial Intelligence
+Scipy - Scientific Computations
+PyQT - Cross-Platform Applications
+
