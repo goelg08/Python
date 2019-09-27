@@ -1,6 +1,6 @@
 Libraries used for following developments:
 
-API - Flask, Bottle, Pyramid
+API - Flask, Bottle, Pyramid, Test
 Website - Django, TurboGears, web2py
 APP(CMS, ERP) - Plone, django-cms, Mezzanine
 
