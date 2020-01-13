@@ -1,6 +1,6 @@
 import sys
 
-#Define  a main() function which prints little greetings
+#Define  a main() function which prints little greetings hello goel
 def main():
 	print("Hello!")
 	
