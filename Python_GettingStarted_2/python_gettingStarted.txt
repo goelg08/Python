@@ -4,3 +4,5 @@ Tensor Flow - Artificial Intelligence
 Scipy - Scientific Computations
 PyQT - Cross-Platform Applications
 
+BeautifulSoup - Library for Web Scrapping
+
