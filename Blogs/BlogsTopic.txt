@@ -1,4 +1,4 @@
 1. Pentaho archive is corrupted - Done.
-2. How to write CLR procedure.
+2. How to write CLR procedure effectively.
 
 Hello
