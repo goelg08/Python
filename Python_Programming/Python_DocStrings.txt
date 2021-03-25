@@ -1,0 +1,103 @@
+=======================================
+Python DocStrings and Its Importance.
+=======================================
+
+The code you write today will be read by you or by your team after a few days or months or maybe after few years. 
+If the code is not readable then you are going to spend your precious time figuring out what the module, class, function, or method is doing. 
+Python docstrings are a great tool to make your code readable. 
+Once docstrings are added to the code, you can easily access docstrings using help() and __doc__ attribute on the object and understand what the module, 
+class, function, or method is doing.
+
+======================
+What are Docstrings:
+======================
+
+Docstrings or documentation strings are the string literals that appear in the first line of module, class, function, or methods definition. 
+The docstrings are created by enclosing the documentation text within '''triple single-quotes''' or """triple double-quotes""". 
+Docstrings should explain what the module, class, function, or method does not how it does. 
+
+There are two types of docstrings: one-line docstrings and multi-line docstrings.
+
+=====================
+One-line Docstrings
+=====================
+
+As the name itself says, one-line docstrings fit in one line. Some of the characteristics of one-line docstrings you should keep in mind are –
+
+The docstring text should begin with a capital letter and end with a period.
+There should not be any blank line before or after the docstring. 
+Docstring should not be repeating the function parameters. Instead, the docstring should follow 'Do <something> and return <something>' format. 
+For the below example, we could write docstring as """Takes two numbers and returns sum.""".
+
+def func1(num1, num2):
+    """Takes two numbers and returns their sum."""
+    return num1 + num2 
+
+=======================
+Multi-line Docstrings
+=======================
+
+Unlike one-line docstrings, multi-line docstrings expand to multiple lines. Some of the characteristics of multi-line docstrings-
+
+The very first line of multi-line docstring is called the summary line and it is recommended that the summary line should fit in one line.
+The summary line is followed by a blank line.
+The blank line is followed by detailed documentation about the module, class, function, method.
+If docstring is for a function or method, then the docstring should contain a summary line and documentation for parameters, return values, exceptions, etc. 
+If docstring is for a class, then the docstring should contain a summary line and the documentation for methods, instance variables, examples for method usage, etc.
+Similarly, if the docstring is for a module or package then it should contain documentation such as the list of classes, exceptions, functions. 
+
+class Rectange():
+    """A class to represent a rectangle
+    
+    Attributes:
+        height (float): height of rectangle
+        weight (float): weight of rectangle
+    
+    Methods:
+        area: returns the area of rectangle
+    """
+    def __init__(self, height, width):
+        """Constructs all the necessary attributes for the rectangel object.
+
+        Parameters:
+            height (float): height of rectangle
+            weight (float): weight of rectangle
+        """
+        self.height = height
+        self.width = width
+    
+    def area(self):
+        """This method returns area of the rectangle.
+
+        Parameters:
+            None
+
+        Returns:
+            float: returns area of the rectangle
+        """
+        return self.height * self.width
+		
+==========================
+How to access docstrings
+==========================
+The docstrings will become part of your code hence they will also be stored in the memory. 
+You can access the docstring of module, class, function, or method using two methods as outlined below.
+
+a) Using __doc__ attribute
+Using the __doc__ attribute, you can get docstring for your module, function, class, or methods. 
+In the below example, you are able to access the docstring of function by using the __doc__ attribute. 
+For the above Rectangle  class example, let’s see how to get docstrings using __doc__ attribute. 
+
+r1 = Rectange(10,20)
+print(r1.__doc__)
+
+b) Using built-in help() function
+Another way to access docstrings is using Python’s built-in help() function as you can see from the below example. 
+The built-in help() function gave very detailed documentation including docstrings for methods. 
+
+r1 = Rectange(10,20)
+print(help(Rectange))
+
+Specific to function :
+print(r1.area.__doc__)
+print(help(r1.area))
